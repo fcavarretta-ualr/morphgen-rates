@@ -97,8 +97,6 @@ if __name__ == '__main__':
     process_morphologies('morphologies/bathellier/PYR', 800, 'pyr_apical_sholl_plot.txt', 'pyr_bifurcations.txt')
     print('\nSL')
     process_morphologies('morphologies/bathellier/SL', 500, 'sl_apical_sholl_plot.txt', 'sl_bifurcations.txt')
-    print('\nHippocampus')
-    process_morphologies('morphologies/harland', 800, 'hippocampus_apical_sholl_plot.txt', 'hippocampus_bifurcations.txt')
     print('\nNeocortex')
     process_morphologies('morphologies/markram_dataset', 1400, 'neocortex_apical_sholl_plot.txt', 'neocortex_bifurcations.txt')
     print('\nMitral')
