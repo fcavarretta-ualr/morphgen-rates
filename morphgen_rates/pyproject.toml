@@ -8,7 +8,11 @@ version = "0.1.0"
 description = "Compute bifurcation and annihilation rates from morphology data"
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = ["numpy"]
+dependencies = [
+  "numpy>=1.23",
+  "pandas>=1.5",
+  "pyomo>=6.6",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
