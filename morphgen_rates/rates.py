@@ -16,7 +16,7 @@ def mk_objective(model, kappa, Z, V):
         terms += [getA_term(model, kappa, Z, V, m, i) * getA_term(model, kappa, Z, V, n, i) for m in range(0, i) for n in range(0, i)]
     return sum(terms)
 
-def compute_rates(step_size, dx, Z, V, n_bif=None, max_iter=10000, kappa_Penalty_Mean=0, kappa_Penalty_Var=1.0):
+def compute_rates(max_step_size, dx, Z, V, n_bif=None, max_iter=10000, kappa_Penalty_Mean=0, kappa_Penalty_Var=1.0):
     """
     Solves a QP problem using Pyomo with vector-style variable indexing.
 
@@ -45,7 +45,7 @@ def compute_rates(step_size, dx, Z, V, n_bif=None, max_iter=10000, kappa_Penalty
     model.constraints = ConstraintList()
     for i in range(kappa.size):
         model.constraints.add(model.b[i] >= kappa[i])
-        model.constraints.add((2 * model.b[i] - kappa[i]) * step_size <= 1)
+        model.constraints.add((2 * model.b[i] - kappa[i]) * max_step_size <= 1)
 
     # if we have number of bifurcations as contraings
     if n_bif:        
