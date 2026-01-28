@@ -99,4 +99,4 @@ def compute_rates(max_step_size, dx, Z, V, n_bif=None, max_iter=10000, kappa_Pen
     # calculate annihilation rates
     a = - kappa + b
     a[a < 0] = 0.
-    return b, a
+    return { 'bifurcation_rate':b, 'annihilation_rate':a }
