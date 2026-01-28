@@ -1,6 +1,9 @@
 from pyomo.environ import *
 import numpy as np
 
+_Mean_Penalty=0
+_Var_Penalty=1.0
+
 def mk_objective(model, kappa, Z, V):
     
     def getA_term(model, kappa, Z, V, m, i):
@@ -17,7 +20,8 @@ def mk_objective(model, kappa, Z, V):
         terms += [getA_term(model, kappa, Z, V, m, i) * getA_term(model, kappa, Z, V, n, i) for m in range(0, i) for n in range(0, i)]
     return sum(terms)
 
-def compute_rates(data, max_step_size, kappa_Penalty_Mean=0, kappa_Penalty_Var=1.0):
+def compute_rates(data, max_step_size):
+    
     """
     Solves a QP problem using Pyomo with vector-style variable indexing.
 
@@ -28,6 +32,7 @@ def compute_rates(data, max_step_size, kappa_Penalty_Mean=0, kappa_Penalty_Var=1
         np.ndarray: [x[0], x[1], objective_value]
     """
 
+    global _Mean_Penalty, _Var_Penalty
     dx = data['sholl']['bin_size']
     Z =  data['sholl']['mean']
     V = data['sholl']['var']
@@ -89,7 +94,7 @@ def compute_rates(data, max_step_size, kappa_Penalty_Mean=0, kappa_Penalty_Var=1
 
     # Objective
     model.obj = Objective(
-        expr=mk_objective(model, kappa, Z, V) + kappa_Penalty_Mean * model.s[0] ** 2 + kappa_Penalty_Var * model.s[1] ** 2,
+        expr=mk_objective(model, kappa, Z, V) + _Mean_Penalty * model.s[0] ** 2 + _Var_Penalty * model.s[1] ** 2,
         sense=minimize
     )
 
