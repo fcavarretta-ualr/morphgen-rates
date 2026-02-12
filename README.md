@@ -19,7 +19,7 @@ This package implements computational methods from the publication
 For questions, issues, or contributions, please contact:
 
 - Author: Francesco Cavarretta
-- Email: [fcavarretta@ualr.edu](fcavarretta@ualr.edu)
+- Email: [fcavarretta@ualr.edu](mailto:fcavarretta@ualr.edu)
 
 ### What does this package do?
 
