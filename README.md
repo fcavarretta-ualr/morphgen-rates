@@ -33,6 +33,7 @@ The rates vary with distance from the soma and are inferred from:
 - **Sholl analysis data**: Mean and standard deviation of dendrite intersection counts across radial distance bins from the soma
 - **Bifurcation statistics (Optional)**: Summary statistics describing the number of branching points in the reconstructed dendritic tree
 
+In the latest version, the package has been expanded with a new function that estimates the probability distribution of the number of primary dendrites using the mean, standard deviation, minimum, and maximum of the experimental counts.
 
 ## 2. Installation
 
@@ -76,12 +77,43 @@ https://github.com/coin-or/Ipopt
 
 ## 3. Quick start
 
+### Calculation of bifurcation and annihilation rates
+The primary function implemented in this package is the calculation of bifurcation and annihilation rates as a function of the distance from the soma.
+To do this, first you need to import the module:
 ```python
-# Example 1: Computing rates from built-in data
-from morphgen_rates, compute_rates
+from morphgen_rates import compute_rates
+```
+Next, identify the morphometric dataset you want and pass it to the function as the parameters argument.
+Below is an example that shows how the morphometric data should be structured when passed as the `parameters` argument:
 
-# Step 1: Prepare data for rate computation
-rate_input = {
+```python
+parameters = {
+    "sholl_plot": {
+        "bin_size": 50,
+        "mean"[1.0, 4.5, 6.2, 6.2, 8.0, 7.0, 5.0, 4.5, 0.0],
+        "std":[0.5, 1.5, 2.0, 3.0, 1.5, 2.0, 3.0, 1.0, 0.0]
+    },
+    "bifurcation_count": {
+        "mean": 18,
+        "std": 5,
+    },
+}
+```
+In particular, `bifurcation_count` is optional.
+
+Then compute the bifurcation and annihilation rates:
+```python
+rates = compute_rates(parameters, max_step_size=5.0)
+```
+
+Below is a the full example on how to use this function.
+
+```python
+# Step 1: Import package
+from morphgen_rates import compute_rates
+
+# Step 2: Determine morphometric parameters
+parameters = {
     "sholl_plot": {
         "bin_size": 50,
         "mean"[1.0, 4.5, 6.2, 6.2, 8.0, 7.0, 5.0, 4.5, 0.0],
@@ -93,15 +125,85 @@ rate_input = {
     },
 }
 
-# Step 2: Compute rates
-rates = compute_rates(rate_input, max_step_size=5.0)
 
-# Step 3: Display results
+# Step 3: Computer bifurcation and annhilation rates
+rates = compute_rates(parameters, max_step_size=5.0)
+
+# Step 4: Display results
 print("Bifurcation rates by radial bin:")
 for i, (bif, ann) in enumerate(zip(rates["bifurcation_rate"], rates["annihilation_rate"])):
-    distance = apical["sholl_plot"]["bin_size"] * (i + 0.5)
+    distance = parameters["sholl_plot"]["bin_size"] * (i + 0.5)
     print(f"  {distance:.1f} μm: β={bif:.4f}, α={ann:.4f}")
 ```
+The output of this example is:
+```
+Bifurcation rates by radial bin:
+  25.0 μm: β=0.0301, α=0.0000
+  75.0 μm: β=0.0064, α=0.0000
+  125.0 μm: β=0.0355, α=0.0355
+  175.0 μm: β=0.0051, α=0.0000
+  225.0 μm: β=0.0000, α=0.0027
+  275.0 μm: β=0.0000, α=0.0067
+  325.0 μm: β=0.0000, α=0.0021
+  375.0 μm: β=0.0000, α=inf
+```
+The output above shows the spatial bin centers in the left column and the corresponding bifurcation (β) and annihilation (α) rates in the right column, computed for each 50-µm bin.
+
+### Primary Dendrite Distribution Estimation
+In recent versions, we implemented a function that enables estimation of the distribution of the number of primary dendrites from morphometric parameters (i.e., the mean, standard deviation, minimum, and maximum of the experimental counts).
+
+To do this, first you need to import the module:
+```python
+from morphgen_rates import compute_init_number_probs
+```
+Next, identify the morphometric parameters to be passed as the arguments (i.e., `mean_primary_dendrites`, `sd_primary_dendrites`, `min_primary_dendrites`, `max_primary_dendrites`).
+
+```python
+probs = compute_init_number_probs(
+    mean_primary_dendrites=3.5,
+    sd_primary_dendrites=1.2,
+    min_primary_dendrites=1,
+    max_primary_dendrites=7,
+    slack_penalty=0.1
+)
+```
+
+
+Below is a the full example on how to use this function.
+
+```python
+from morphgen_rates import compute_init_number_probs
+import numpy as np
+
+# Compute probability distribution
+probs = compute_init_number_probs(
+    mean_primary_dendrites=3.5,
+    sd_primary_dendrites=1.2,
+    min_primary_dendrites=1,
+    max_primary_dendrites=7,
+    slack_penalty=0.1
+)
+
+# Display results
+for n_dendrites, prob in enumerate(probs):
+    if prob > 1e-6:
+        print(f"P({n_dendrites} primary dendrites) = {prob:.4f}")
+
+# Verify moments
+actual_mean = np.sum(np.arange(len(probs)) * probs)
+actual_var = np.sum((np.arange(len(probs)) - actual_mean)**2 * probs)
+```
+The output of this example is:
+```
+P(1 primary dendrites) = 0.0880
+P(2 primary dendrites) = 0.1705
+P(3 primary dendrites) = 0.2355
+P(4 primary dendrites) = 0.2321
+P(5 primary dendrites) = 0.1631
+P(6 primary dendrites) = 0.0817
+P(7 primary dendrites) = 0.0292
+```
+The output above shows the probability of observing a given number of primary dendrites.
 
 ## 4. Data Format Specifications
 
@@ -123,6 +225,23 @@ The package includes a CSV file (`morph_data.csv`) with the following columns:
 | Count2 | float | Sholl intersections at bin 2 |
 | … | … | … |
 | CountN | float | Sholl intersections at bin N |
+
+Records can be accessed with `get_data`, as shown below:
+
+```python
+from morphgen_rates import get_data
+
+# Retrieve morphometric data for semilunar cells from the anterior piriform cortex
+parameters = get_data("aPC", "SL")
+
+# Compute rates
+rates = compute_rates(parameters, max_step_size=5.0)
+
+...
+
+```
+
+In this example, `get_data` returns an object in the format expected by `compute_rates`, so you can pass it directly as the first argument.
 
 ## 5. Troubleshooting
 
