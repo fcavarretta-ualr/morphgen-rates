@@ -78,27 +78,25 @@ https://github.com/coin-or/Ipopt
 
 ```python
 # Example 1: Computing rates from built-in data
-from morphgen_rates import get_data, compute_rates
+from morphgen_rates, compute_rates
 
-# Step 1: Load morphology data for pyramidal neurons in anterior piriform cortex
-data = get_data("aPC", "PYR")
-
-# Step 2: Extract apical dendrite statistics
-apical = data["apical_dendrite"]
-
-# Step 3: Prepare data for rate computation
+# Step 1: Prepare data for rate computation
 rate_input = {
-    "sholl_plot": apical["sholl_plot"],
+    "sholl_plot": {
+        "bin_size": 50,
+        "mean"[1.0, 4.5, 6.2, 6.2, 8.0, 7.0, 5.0, 4.5, 0.0]:
+        "std":[0.5, 1.5, 2.0, 3.0, 1.5, 2.0, 3.0, 1.0, 0.0]
+    },
     "bifurcation_count": {
-        "mean": apical["bifurcation_count"]["mean"],
-        "std": apical["bifurcation_count"]["std"],
+        "mean": 18,
+        "std": 5,
     },
 }
 
-# Step 4: Compute rates
-rates = compute_rates(rate_input, max_step_size=25.0)
+# Step 2: Compute rates
+rates = compute_rates(rate_input, max_step_size=5.0)
 
-# Step 5: Display results
+# Step 3: Display results
 print("Bifurcation rates by radial bin:")
 for i, (bif, ann) in enumerate(zip(rates["bifurcation_rate"], rates["annihilation_rate"])):
     distance = apical["sholl_plot"]["bin_size"] * (i + 0.5)
