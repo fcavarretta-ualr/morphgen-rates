@@ -20,7 +20,7 @@ This package implements computational methods from the publication:
 
 `morphgen-rates` is distributed under an MIT-style license with an academic citation requirement. If this software, or any substantial portion or derivative of it, is used to produce results included in a scholarly publication, conference paper, thesis, dissertation, preprint, technical report, presentation, poster, or other academic or research output, users must cite the publication above. 
 
-[Read the full license](https://github.com/fcavarretta-ualr/morphgen-rates/LICENSE)
+[Read the full license](LICENSE)
 
 For questions, issues, or contributions, please contact:
 
