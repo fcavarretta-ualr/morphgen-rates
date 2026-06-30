@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use morphgen-rates in your research, please cite the associated paper."
+title: "morphgen-rates"
+authors:
+  - family-names: "Cavarretta"
+    given-names: "Francesco"
+license: MIT
+repository-code: "https://github.com/USERNAME/morphgen-rates"
+date-released: 2026-06-30
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Cavarretta"
+      given-names: "Francesco"
+  title: "A mathematical model for data-driven synthesis of neuron morphologies based on random walks"
+  journal: "Frontiers in Applied Mathematics and Statistics"
+  year: 2025
+  doi: "https://doi.org/10.3389/fams.2025.1632271"
