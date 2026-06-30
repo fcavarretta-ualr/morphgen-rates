@@ -18,7 +18,9 @@ This package implements computational methods from the publication:
 
 [Cavarretta F. (2025). *A mathematical model for data-driven synthesis of neuron morphologies based on random walks.* Frontiers in Applied Mathematics and Statistics, 11:1632271. doi: 10.3389/fams.2025.1632271](https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2025.1632271/full)
 
-`morphgen-rates` is distributed under an MIT-style license with an academic citation requirement. If this software, or any substantial portion or derivative of it, is used to produce results included in a scholarly publication, conference paper, thesis, dissertation, preprint, technical report, presentation, poster, or other academic or research output, users must cite the publication above.
+`morphgen-rates` is distributed under an MIT-style license with an academic citation requirement. If this software, or any substantial portion or derivative of it, is used to produce results included in a scholarly publication, conference paper, thesis, dissertation, preprint, technical report, presentation, poster, or other academic or research output, users must cite the publication above. 
+
+[Read the full license](https://github.com/fcavarretta-ualr/morphgen-rates/LICENSE)
 
 For questions, issues, or contributions, please contact:
 
